@@ -145,6 +145,7 @@ async def action_agent(state: TicketState):
     server_params = StdioServerParameters(
         command=sys.executable,
         args=["med_mcp.py"],
+        env=dict(os.environ),
     )
     
     async with stdio_client(server_params) as (read, write):
