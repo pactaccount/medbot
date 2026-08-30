@@ -26,7 +26,6 @@ services:
   - type: web
     name: medbot-frontend
     env: static
-    region: ohio
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "./frontend/dist"
     envVars:
