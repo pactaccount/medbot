@@ -7,3 +7,4 @@ mcp
 pymupdf
 python-dotenv
 motor
+google-generativeai
