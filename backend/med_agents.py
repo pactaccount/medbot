@@ -90,9 +90,14 @@ async def emergency_agent(state: TicketState):
         "steps": state.get("steps", []) + ["🚨 Emergency Protocol activated — escalating to 911 advisory"]
     }
 
-async def policy_agent(state: TicketState):
-    print(f"[{state.get('ticket_id', 'Session')}] Policy Agent answering...")
-    # Read policies.md and PDFs
+# --- Global Cache for Policies to avoid slow PDF parsing on every request ---
+_POLICIES_CACHE = None
+
+def get_policies_text() -> str:
+    global _POLICIES_CACHE
+    if _POLICIES_CACHE is not None:
+        return _POLICIES_CACHE
+    
     policies_text = ""
     try:
         with open(POLICIES_PATH, "r") as f:
@@ -100,8 +105,7 @@ async def policy_agent(state: TicketState):
     except FileNotFoundError:
         print(f"[PolicyAgent] WARNING: {POLICIES_PATH} not found")
 
-    # Read PDFs from data folder
-    pdf_files = list(PDF_DIR.glob("*.pdf"))[:3]  # Limit to 3 to save token context
+    pdf_files = list(PDF_DIR.glob("*.pdf"))[:3]
     for pdf_file in pdf_files:
         try:
             doc = fitz.open(str(pdf_file))
@@ -109,6 +113,13 @@ async def policy_agent(state: TicketState):
                 policies_text += page.get_text() + "\n"
         except Exception as e:
             print(f"Error reading PDF {pdf_file}: {e}")
+            
+    _POLICIES_CACHE = policies_text[:15000]
+    return _POLICIES_CACHE
+
+async def policy_agent(state: TicketState):
+    print(f"[{state.get('ticket_id', 'Session')}] Policy Agent answering...")
+    policies_text = get_policies_text()
 
     prompt = f"""You are the MedBot receptionist, a warm, empathetic, and highly professional human-like assistant.
     Answer the patient's request using ONLY the provided policies. 
@@ -116,7 +127,7 @@ async def policy_agent(state: TicketState):
     Always be polite, caring, and helpful.
     
     Policies Context:
-    {policies_text[:15000]} # Truncated to avoid context limits
+    {policies_text}
     
     Patient Request:
     {state['email_content']}
@@ -130,7 +141,7 @@ async def policy_agent(state: TicketState):
     return {
         "final_response": response.choices[0].message.content,
         "steps": state.get("steps", []) + [
-            f"📋 Policy Agent: Loaded clinic policies & {len(pdf_files)} PDF document(s)",
+            f"📋 Policy Agent: Loaded clinic policies & {len(list(PDF_DIR.glob('*.pdf'))[:3])} PDF document(s)",
             "✅ Policy Agent: Response generated",
         ]
     }
