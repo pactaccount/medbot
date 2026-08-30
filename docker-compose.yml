@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - LITELLM_MODEL=gemini/gemini-3.5-flash
+      - MONGODB_URI=${MONGODB_URI}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      # Allows CORS requests from the locally running frontend container
+      - FRONTEND_URL=http://localhost:5173
+    volumes:
+      # Optional: Mount backend code for hot-reloading during dev
+      # - ./backend:/app
+      - ./backend/data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
