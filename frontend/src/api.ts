@@ -59,7 +59,7 @@ const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export async function sendMessage(userMessage: string): Promise<ApiResponse> {
   try {
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+    const API_BASE_URL = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? 'http://localhost:8001' : '');
     const res = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

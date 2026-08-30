@@ -4,6 +4,9 @@ from pydantic import BaseModel
 from med_agents import build_graph
 from typing import Optional
 import uuid
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
 
 app = FastAPI()
 
@@ -80,6 +83,21 @@ async def chat_endpoint(request: ChatRequest):
         intent=intent,
         steps=final_state.get("steps", [])
     )
+
+# --- Serve React Frontend ---
+frontend_dist_path = Path(__file__).parent.parent / "frontend" / "dist"
+if frontend_dist_path.exists():
+    # Mount the assets directory explicitly
+    assets_dir = frontend_dist_path / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+        
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        file_path = frontend_dist_path / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(frontend_dist_path / "index.html")
 
 if __name__ == "__main__":
     import uvicorn
