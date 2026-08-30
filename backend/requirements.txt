@@ -9,3 +9,4 @@ python-dotenv
 motor
 google-generativeai
 fastmcp
+certifi

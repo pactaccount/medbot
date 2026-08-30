@@ -3,11 +3,13 @@ from fastmcp import FastMCP
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
+import certifi
+
 load_dotenv()
 
 mcp = FastMCP("MedBot Server")
 MONGO_URI = os.getenv("MONGODB_URI")
-client = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
 db = client['medibot_db']
 patients_collection = db['patients']
 
