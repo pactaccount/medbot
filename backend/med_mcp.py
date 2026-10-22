@@ -9,14 +9,25 @@ load_dotenv()
 
 mcp = FastMCP("MedBot Server")
 MONGO_URI = os.getenv("MONGODB_URI")
-client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
-db = client['medibot_db']
-patients_collection = db['patients']
+client = None
+patients_collection = None
+
+
+def _collection():
+    """Connect on first tool use, so imports and offline tests need no database."""
+    global client, patients_collection
+    if patients_collection is not None:
+        return patients_collection
+    if not MONGO_URI:
+        raise RuntimeError("MONGODB_URI is required for appointment tools")
+    client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
+    patients_collection = client['medibot_db']['patients']
+    return patients_collection
 
 @mcp.tool()
 def get_patient_details(patient_id: str) -> str:
     """Retrieve all appointment information for a specific patient by their ID."""
-    patient = patients_collection.find_one({"patient_id": patient_id})
+    patient = _collection().find_one({"patient_id": patient_id})
     if not patient:
         return f"No patient found with ID {patient_id}"
     return str(patient)
@@ -24,7 +35,7 @@ def get_patient_details(patient_id: str) -> str:
 @mcp.tool()
 def cancel_appointment(patient_id: str) -> str:
     """Cancel an appointment for a patient."""
-    result = patients_collection.update_one(
+    result = _collection().update_one(
         {"patient_id": patient_id},
         {"$set": {"appointment.status": "Cancelled"}}
     )
@@ -35,7 +46,7 @@ def cancel_appointment(patient_id: str) -> str:
 @mcp.tool()
 def reschedule_appointment(patient_id: str, new_date: str, new_time: str) -> str:
     """Reschedule an existing appointment to a new date and time for a patient."""
-    result = patients_collection.update_one(
+    result = _collection().update_one(
         {"patient_id": patient_id},
         {"$set": {
             "appointment.date": new_date,
@@ -50,10 +61,10 @@ def reschedule_appointment(patient_id: str, new_date: str, new_time: str) -> str
 @mcp.tool()
 def register_patient(patient_id: str, name: str, contact: str = "", email: str = "") -> str:
     """Register a new patient in the system if they don't already exist."""
-    existing = patients_collection.find_one({"patient_id": patient_id})
+    existing = _collection().find_one({"patient_id": patient_id})
     if existing:
         return f"Patient {patient_id} already exists as '{existing.get('name')}'. No need to re-register."
-    patients_collection.insert_one({
+    _collection().insert_one({
         "patient_id": patient_id,
         "name": name,
         "contact": contact,
@@ -65,7 +76,7 @@ def register_patient(patient_id: str, name: str, contact: str = "", email: str =
 @mcp.tool()
 def book_appointment(patient_id: str, date: str, time: str, reason: str, patient_name: str = "") -> str:
     """Book a new appointment for a patient. Creates the patient record if they don't exist yet."""
-    result = patients_collection.update_one(
+    result = _collection().update_one(
         {"patient_id": patient_id},
         {"$set": {
             "appointment.status": "Scheduled",

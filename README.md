@@ -107,3 +107,7 @@ medibot/
     │   └── api.ts           # Backend integration
     └── index.html
 ```
+
+## Résumé evidence
+
+[Résumé evidence and verification](docs/RESUME_EVIDENCE.md) records the use case, engineering approach, test status, measured results, limits, and safe résumé wording.

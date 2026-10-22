@@ -107,8 +107,12 @@ class TestChatEndpoint:
         assert "911" in body or "emergency" in body
 
     async def test_cors_options_returns_200(self, api_client):
-        r = await api_client.options("/chat")
+        r = await api_client.options(
+            "/chat",
+            headers={"Origin": "https://example.com", "Access-Control-Request-Method": "POST"},
+        )
         assert r.status_code == 200
+        assert r.headers.get("access-control-allow-origin")
 
     async def test_missing_message_field_returns_422(self, api_client):
         r = await api_client.post("/chat", json={"session_id": "abc"})
