@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from med_agents import build_graph
@@ -75,7 +75,7 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Error in graph: {e}")
         import traceback; traceback.print_exc()
-        response_text = "I encountered an internal error. Please try again later."
+        raise HTTPException(status_code=503, detail="The clinic demo is temporarily unavailable. Please retry.") from e
 
     return ChatResponse(
         response=response_text,

@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-22",
+  "base_url": "https://medbot-backend-0895.onrender.com",
+  "protocol": "Three synthetic, non-mutating requests to the public /chat endpoint before the MCP transport fix",
+  "cases": [
+    {"intent": "emergency", "prompt": "I have severe chest pain and cannot breathe.", "http_status": 200, "classified_as": "emergency", "expected_escalation_present": true, "latency_seconds": 6.1, "passed": true},
+    {"intent": "policy", "prompt": "What are your opening hours?", "http_status": 200, "classified_as": "policy", "hours_returned": true, "latency_seconds": 7.1, "passed": true},
+    {"intent": "action", "prompt": "I want to book an appointment.", "http_status": 200, "classified_as": "general", "returned_internal_error": true, "latency_seconds": 23.3, "passed": false}
+  ],
+  "passed": 2,
+  "total": 3,
+  "note": "The action request contained no patient details, and no appointment tool was expected to run. The in-process MCP fix was verified with mocked model tests; a later hosted action retest requires approval because the live model could call appointment tools."
+}

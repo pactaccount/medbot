@@ -148,103 +148,94 @@ async def policy_agent(state: TicketState):
 
 async def action_agent(state: TicketState):
     print(f"[{state.get('ticket_id', 'Session')}] Action Agent investigating...")
-    from mcp.client.stdio import stdio_client, StdioServerParameters
-    from mcp.client.session import ClientSession
-    import sys
-    
-    # Run the MCP server
-    server_params = StdioServerParameters(
-        command=sys.executable,
-        args=["med_mcp.py"],
-        env=dict(os.environ),
-    )
-    
-    async with stdio_client(server_params) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            tools_response = await session.list_tools()
-            tools = tools_response.tools
-            
-            litellm_tools = []
-            for t in tools:
-                litellm_tools.append({
-                    "type": "function",
-                    "function": {
-                        "name": t.name,
-                        "description": t.description,
-                        "parameters": t.inputSchema
-                    }
-                })
-            
-            system_prompt = """You are the MedBot receptionist, a warm, empathetic, and highly professional medical assistant. 
+    from fastmcp import Client
+    from med_mcp import mcp
+
+    # Keep the MCP tool protocol, but avoid spawning a second Python process
+    # for each request on small hosted instances.
+    async with Client(mcp) as session:
+        tools = await session.list_tools()
+
+        litellm_tools = []
+        for t in tools:
+            litellm_tools.append({
+                "type": "function",
+                "function": {
+                    "name": t.name,
+                    "description": t.description,
+                    "parameters": t.inputSchema
+                }
+            })
+
+        system_prompt = """You are the MedBot receptionist, a warm, empathetic, and highly professional medical assistant.
 Your goal is to help the patient by booking, cancelling, or checking their appointment using the provided tools.
 CRITICAL INSTRUCTIONS:
-- Speak conversationally and naturally, like a real human customer care representative. 
+- Speak conversationally and naturally, like a real human customer care representative.
 - DO NOT use bullet points or sound like a robot.
 - Patient IDs can be ANY format the patient gives you (e.g. "23456", "P-1001", "JA-99") — do NOT reject them.
 - The book_appointment tool creates the patient record automatically if they don't exist yet, so always proceed with booking.
 - If you need to book for a new patient, pass their name in the patient_name field.
 - If you are missing information to book an appointment (like patient ID, date, time, or reason for visit), ask for it gently one or two things at a time.
 - Always be polite, caring, and helpful."""
-            
-            # Build messages from full conversation history so the LLM remembers earlier turns
-            chat_history = state.get("chat_history", [])
-            messages = [{"role": "system", "content": system_prompt}]
 
-            # Replay all previous turns so the LLM has full context
-            for m in chat_history:
-                if isinstance(m, dict) and m.get("role") in ("user", "assistant"):
-                    messages.append(m)
+        # Build messages from full conversation history so the LLM remembers earlier turns
+        chat_history = state.get("chat_history", [])
+        messages = [{"role": "system", "content": system_prompt}]
 
-            # Append current user message as the latest turn
-            messages.append({"role": "user", "content": state['email_content']})
+        # Replay all previous turns so the LLM has full context
+        for m in chat_history:
+            if isinstance(m, dict) and m.get("role") in ("user", "assistant"):
+                messages.append(m)
 
-            # Inject any triage-extracted info as a system hint
-            if state.get('extracted_info'):
-                messages.insert(1, {"role": "system", "content": f"Extracted info from triage: {json.dumps(state['extracted_info'])}"})
-            response = await acompletion(
+        # Append current user message as the latest turn
+        messages.append({"role": "user", "content": state['email_content']})
+
+        # Inject any triage-extracted info as a system hint
+        if state.get('extracted_info'):
+            messages.insert(1, {"role": "system", "content": f"Extracted info from triage: {json.dumps(state['extracted_info'])}"})
+        response = await acompletion(
+            model=os.environ["LITELLM_MODEL"],
+            messages=messages,
+            tools=litellm_tools
+        )
+
+        response_message = response.choices[0].message
+
+        if getattr(response_message, 'tool_calls', None):
+            messages.append(response_message.model_dump())
+            for tool_call in response_message.tool_calls:
+                func_name = tool_call.function.name
+                args = json.loads(tool_call.function.arguments)
+                print(f"[{state.get('ticket_id', 'Session')}] Calling tool {func_name} with {args}")
+                result = await session.call_tool(func_name, arguments=args)
+
+                tool_content = str(result.content[0].text) if result.content else "Success"
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "name": func_name,
+                    "content": tool_content
+                })
+
+            final_response = await acompletion(
                 model=os.environ["LITELLM_MODEL"],
-                messages=messages,
-                tools=litellm_tools
+                messages=messages
             )
-            
-            response_message = response.choices[0].message
-            
-            if getattr(response_message, 'tool_calls', None):
-                messages.append(response_message.model_dump())
-                for tool_call in response_message.tool_calls:
-                    func_name = tool_call.function.name
-                    args = json.loads(tool_call.function.arguments)
-                    print(f"[{state.get('ticket_id', 'Session')}] Calling tool {func_name} with {args}")
-                    result = await session.call_tool(func_name, arguments=args)
-                    
-                    tool_content = str(result.content[0].text) if result.content else "Success"
-                    messages.append({
-                        "role": "tool",
-                        "tool_call_id": tool_call.id,
-                        "name": func_name,
-                        "content": tool_content
-                    })
-                
-                final_response = await acompletion(
-                    model=os.environ["LITELLM_MODEL"],
-                    messages=messages
-                )
-                return {
-                    "final_response": final_response.choices[0].message.content,
-                    "steps": state.get("steps", []) + [
-                        f"⚙️ Action Agent: Connected to MCP tool server",
-                        f"🔧 Tool called: {', '.join(tc.function.name for tc in response_message.tool_calls)}",
-                        "✅ Action Agent: Task completed",
-                    ]
-                }
-            else:
-                return {
-                    "final_response": response_message.content,
-                    "steps": state.get("steps", []) + [
-                        "⚙️ Action Agent: Processed request (no tool call needed)",
-                    ]
-                }
+            return {
+                "final_response": final_response.choices[0].message.content,
+                "steps": state.get("steps", []) + [
+                    f"⚙️ Action Agent: Connected to MCP tool server",
+                    f"🔧 Tool called: {', '.join(tc.function.name for tc in response_message.tool_calls)}",
+                    "✅ Action Agent: Task completed",
+                ]
+            }
+        else:
+            return {
+                "final_response": response_message.content,
+                "steps": state.get("steps", []) + [
+                    "⚙️ Action Agent: Processed request (no tool call needed)",
+                ]
+            }
 
 def route_ticket(state: TicketState) -> str:
     intent = state.get("intent", "").lower()

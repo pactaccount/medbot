@@ -111,3 +111,5 @@ medibot/
 ## Résumé evidence
 
 [Résumé evidence and verification](docs/RESUME_EVIDENCE.md) records the use case, engineering approach, test status, measured results, limits, and safe résumé wording.
+
+The [public demo](https://medbot-backend-0895.onrender.com/) answered policy and emergency smoke prompts on 2026-10-22. Appointment actions need a separate live verification; see the evidence page for the failed pre-fix request and current limits.

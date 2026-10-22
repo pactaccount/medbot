@@ -28,35 +28,6 @@ function detectScenario(message: string): AgentState {
 // Persist session across turns so server-side memory works
 let currentSessionId: string | null = null;
 
-const MOCK_RESPONSES: Record<string, ApiResponse> = {
-  triage: {
-    response: 'Our clinic is open Monday–Friday 8am–6pm, Saturdays 9am–1pm. We accept BlueCross, Aetna, UnitedHealth, and most major insurers. Patients should fast for 8 hours prior to blood work appointments. Is there anything else I can help you with, or would you like to book a visit?',
-    agentState: 'triage',
-    session_id: '',
-    steps: [],
-  },
-  policy: {
-    response: 'Our clinic is open Monday–Friday 8am–6pm, Saturdays 9am–1pm. We accept BlueCross, Aetna, UnitedHealth, and most major insurers. Patients should fast for 8 hours prior to blood work appointments. Is there anything else I can help you with, or would you like to book a visit?',
-    agentState: 'policy',
-    session_id: '',
-    steps: [],
-  },
-  action: {
-    response: 'I can process that for you. Please provide your Patient ID, preferred date (YYYY-MM-DD), preferred time (HH:MM), and the reason for your visit, and I\'ll confirm availability instantly.',
-    agentState: 'action',
-    session_id: '',
-    steps: [],
-  },
-  emergency: {
-    response: '⚠️ EMERGENCY PROTOCOL ACTIVATED — This sounds like a life-threatening emergency. Please call 911 immediately or proceed to your nearest Emergency Room. Do not drive yourself. Stay on the line with emergency services.',
-    agentState: 'emergency',
-    session_id: '',
-    steps: [],
-  },
-};
-
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
 export async function sendMessage(userMessage: string): Promise<ApiResponse> {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? 'http://localhost:8001' : '');
@@ -76,8 +47,13 @@ export async function sendMessage(userMessage: string): Promise<ApiResponse> {
     // Drive agentState from the real backend intent, fall back to client-side detection
     const agentState: AgentState = INTENT_TO_STATE[data.intent] ?? detectScenario(userMessage);
 
-    return { response: text || MOCK_RESPONSES[detectScenario(userMessage)].response, agentState, session_id: data.session_id, steps: data.steps ?? [] };
+    return { response: text || 'The server returned an empty answer. Please retry.', agentState, session_id: data.session_id, steps: data.steps ?? [] };
   } catch {
-    return { ...MOCK_RESPONSES[detectScenario(userMessage)], session_id: currentSessionId ?? '' };
+    return {
+      response: 'The clinic demo could not reach the server. No request was completed. Please retry.',
+      agentState: 'triage',
+      session_id: currentSessionId ?? '',
+      steps: [],
+    };
   }
 }
