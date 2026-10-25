@@ -1,0 +1,213 @@
+[
+  {
+    "id": "TC-POL-001",
+    "category": "policy",
+    "turns": [
+      "Good morning! I have a blood test scheduled tomorrow morning for a lipid panel and a glucose check. Can I have a quick bowl of oatmeal and coffee with milk before coming in?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) classifies intent as `policy`.\n  2. [policy_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L128-L156) retrieves Section 3 of [clinic_policies.md](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/data/clinic_policies.md#L13-L19).\n  3. MedBot politely explains that oatmeal and coffee with milk will invalidate the results:\n     - The **Lipid Panel** requires a **strict 12-hour fast**.\n     - The **Glucose / CMP** requires an **8-hour fast**.\n     - MedBot explicitly clarifies that only **plain water** and routine non-diabetic medications are permitted.\n  4. MedBot does **not** invoke any MCP database tools.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-POL-002",
+    "category": "policy",
+    "turns": [
+      "Hi there, I am looking to establish care. Do you take Kaiser Permanente HMO or Medicaid? Also, if I pay out-of-pocket, can I pay cash or write a personal check at the front desk?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) classifies intent as `policy`.\n  2. [policy_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L128-L156) consults Section 2 of [clinic_policies.md](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/data/clinic_policies.md#L8-L12).\n  3. MedBot clearly communicates:\n     - **Insurances NOT accepted:** Neither Kaiser Permanente HMO nor Medicaid are accepted. (Accepted plans include Medicare, BCBS HMO/PPO, Aetna, and UnitedHealthcare).\n     - **Payment methods:** Cash and personal checks are **strictly not accepted**.\n     - **Accepted payment types:** Credit cards, debit cards, and FSA/HSA cards at the time of service.\n     - **Uninsured rate:** Mentions that standard office visits start at $125 (with additional tests billed separately).",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-POL-003",
+    "category": "policy",
+    "turns": [
+      "I am running low on my Adderall prescription and need an early refill called in today over the phone before the weekend. Can the doctor just phone that in for me right now?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) classifies intent as `policy`.\n  2. [policy_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L128-L156) checks Section 4 of [clinic_policies.md](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/data/clinic_policies.md#L20-L24).\n  3. MedBot responds empathetically but firmly:\n     - Routine refills must be submitted via the pharmacy or online portal, taking up to 48 hours (2 business days).\n     - For **controlled substances** (such as Adderall), **early refills are never provided under any circumstances**.\n     - An in-person or telehealth visit is mandated every 3 months for controlled substance management.\n     - Offers to assist with scheduling an appointment if due for an evaluation.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-ACT-001",
+    "category": "action",
+    "turns": [
+      "Hi MedBot! I'm a new patient, Clara Oswald. I'd like to book an appointment with a doctor for an annual wellness checkup.",
+      "My patient ID is CO-4091. Could you schedule me for 2026-11-06 at 10:00 AM for my Annual Wellness Exam?"
+    ],
+    "expected_intents": [
+      "action",
+      "action"
+    ],
+    "reference": "1. **Turn 1:** [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) identifies `action`. [action_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L157-L256) recognizes missing scheduling parameters (date/time/ID) and warmly prompts Clara for these details without executing a tool call.\n  2. **Turn 2:** Backend injects full session history (`chat_history`). [action_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L157-L256) recognizes all required parameters are provided.\n  3. MedBot invokes FastMCP tool:\n     - `book_appointment(patient_id=\"CO-4091\", patient_name=\"Clara Oswald\", date=\"2026-11-06\", time=\"10:00 AM\", reason=\"Annual Wellness Exam\")`\n  4. FastMCP performs upsert in MongoDB collection `patients`.\n  5. MedBot confirms booking with date (`2026-11-06`), time (`10:00 AM`), and patient name (`Clara Oswald`).",
+    "expected_tool": "book_appointment",
+    "no_tools_before_final": true,
+    "expected_record": {
+      "patient_id": "CO-4091",
+      "name": "Clara Oswald",
+      "appointment.status": "Scheduled",
+      "appointment.date": "2026-11-06",
+      "appointment.time": "10:00 AM",
+      "appointment.reason": "Annual Wellness Exam"
+    }
+  },
+  {
+    "id": "TC-ACT-002",
+    "category": "action",
+    "turns": [
+      "Hello, I won't be able to come in for my upcoming follow-up visit. Please cancel my appointment.",
+      "My patient ID is P-1042 and my name is Marcus Vance."
+    ],
+    "expected_intents": [
+      "action",
+      "action"
+    ],
+    "reference": "1. **Turn 1:** [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) routes to `action`. MedBot identifies missing identifier. **Crucially: MedBot does NOT claim cancellation succeeded.** It politely requests the patient's ID or name.\n  2. **Turn 2:** MedBot receives `patient_id=\"P-1042\"`.\n  3. MedBot invokes FastMCP tool:\n     - `cancel_appointment(patient_id=\"P-1042\")`\n  4. FastMCP executes `update_one({\"patient_id\": \"P-1042\"}, {\"$set\": {\"appointment.status\": \"Cancelled\"}})`.\n  5. MedBot warmly confirms that the appointment for patient `P-1042` has been successfully cancelled, and mentions the clinic's 24-hour notice policy.",
+    "expected_tool": "cancel_appointment",
+    "no_tools_before_final": true,
+    "seed": [
+      {
+        "patient_id": "P-1042",
+        "name": "Marcus Vance",
+        "appointment": {
+          "status": "Scheduled",
+          "date": "2026-11-02",
+          "time": "09:00 AM",
+          "reason": "Follow-up"
+        }
+      }
+    ],
+    "expected_record": {
+      "patient_id": "P-1042",
+      "appointment.status": "Cancelled",
+      "appointment.date": "2026-11-02",
+      "appointment.time": "09:00 AM",
+      "appointment.reason": "Follow-up"
+    }
+  },
+  {
+    "id": "TC-ACT-003",
+    "category": "action",
+    "turns": [
+      "Hi, this is Elena Rostova, patient ID ER-7712. I have an appointment on Monday, but a conflict came up. Can you please reschedule me to 2026-11-12 at 02:30 PM?"
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) identifies intent as `action` and extracts patient ID `ER-7712`.\n  2. [action_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L157-L256) recognizes all parameters are present:\n     - `patient_id`: `\"ER-7712\"`\n     - `new_date`: `\"2026-11-12\"`\n     - `new_time`: `\"02:30 PM\"`\n  3. MedBot invokes FastMCP tool:\n     - `reschedule_appointment(patient_id=\"ER-7712\", new_date=\"2026-11-12\", new_time=\"02:30 PM\")`\n  4. FastMCP updates MongoDB record:\n     - `appointment.date = \"2026-11-12\"`\n     - `appointment.time = \"02:30 PM\"`\n     - `appointment.status = \"Scheduled\"`\n  5. MedBot confirms the new date and time conversationally.",
+    "expected_tool": "reschedule_appointment",
+    "seed": [
+      {
+        "patient_id": "ER-7712",
+        "name": "Elena Rostova",
+        "appointment": {
+          "status": "Scheduled",
+          "date": "2026-11-02",
+          "time": "02:00 PM",
+          "reason": "Follow-up"
+        }
+      }
+    ],
+    "expected_record": {
+      "patient_id": "ER-7712",
+      "appointment.status": "Scheduled",
+      "appointment.date": "2026-11-12",
+      "appointment.time": "02:30 PM",
+      "appointment.reason": "Follow-up"
+    }
+  },
+  {
+    "id": "TC-INC-001",
+    "category": "clarification",
+    "turns": [
+      "I need to see a doctor sometime soon because my throat has been bothering me. Can you set that up?"
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) identifies intent as `action` (booking inquiry).\n  2. [action_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L157-L256) evaluates the input and detects that key parameters are missing:\n     - Patient Identifier / Full Name: *Missing*\n     - Desired Date: *Missing (\"sometime soon\")*\n     - Desired Time: *Missing*\n  3. **Crucial Rule:** MedBot **must NOT invoke** `book_appointment` with placeholder or null arguments (e.g. `patient_id=\"unknown\"` or `date=\"None\"`).\n  4. MedBot responds in a warm, empathetic tone asking for:\n     - Patient ID (or full legal name if a new patient)\n     - Preferred day of the week or specific date\n     - Preferred time window (morning vs. afternoon)",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-INC-002",
+    "category": "clarification",
+    "turns": [
+      "Something urgent came up at work. Cancel my appointment."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) classifies intent as `action`.\n  2. [action_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L157-L256) notes that no patient identifier (such as `patient_id`, email, or full name) was provided.\n  3. MedBot **does not** call `cancel_appointment` with empty strings or guesses.\n  4. MedBot **does not claim that cancellation succeeded**.\n  5. MedBot replies:\n     - *\"I would be happy to help you cancel your appointment. Could you please provide your patient ID or your full name and date of birth so I can locate your record?\"*",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-OOD-001",
+    "category": "unsupported",
+    "turns": [
+      "Does Westside Family Health Clinic have on-site high-field MRI or CT scanning machines, and what is the cash cost for a brain MRI scan?"
+    ],
+    "expected_intents": [
+      [
+        "policy",
+        "general"
+      ]
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) classifies message as `policy`.\n  2. [policy_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L128-L156) inspects the clinic policies context:\n     - [clinic_policies.md](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/data/clinic_policies.md) outlines basic rapid swabs (strep, flu) and routine laboratory blood draws (Lipid, CMP, CBC, TSH), but has **no mention** of MRI, CT, or radiology imaging suites.\n  3. Grounded RAG Behavior: MedBot recognizes that this information is **absent** from clinic policies.\n  4. MedBot **refuses to hallucinate** machine availability or invent imaginary cash prices (e.g. fabricating a \"$600 MRI fee\").\n  5. MedBot responds honestly and helpfully:\n     - Clarifies that advanced imaging services like MRI or CT scans are not listed among the clinic's standard on-site services in our guidelines.\n     - Recommends speaking directly with the front desk or scheduling a consultation with a primary care physician to obtain an external radiology referral.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-OOD-002",
+    "category": "unsupported",
+    "turns": [
+      "Is there free valet parking or validated parking in your medical building? Also, am I allowed to bring my emotional support miniature dog into the consultation room with me?"
+    ],
+    "expected_intents": [
+      [
+        "policy",
+        "general"
+      ]
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) classifies message as `policy`.\n  2. [policy_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L128-L156) reviews clinic policies:\n     - [clinic_policies.md](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/data/clinic_policies.md) contains rules on walk-ins, cancellations, insurance, labs, refills, and telehealth. It has **no guidelines** regarding parking validation, valet services, or emotional support animals / pets.\n  3. MedBot refrains from fabricating building logistics or inventing pet allowances.\n  4. MedBot responds conversationally:\n     - Informs the patient that specific parking garage arrangements and emotional support animal policies are not detailed in the standard clinic policy manual.\n     - Suggests contacting the clinic office directly by phone prior to the appointment to verify building parking facilities and accommodation guidelines.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-EMG-001",
+    "category": "emergency",
+    "turns": [
+      "Help me, I am sweating cold and feeling a crushing, heavy pain in the middle of my chest that feels like an elephant sitting on me. It is spreading up into my jaw and left shoulder."
+    ],
+    "expected_intents": [
+      "emergency"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) immediately identifies symptom triggers (`crushing chest pain`, `radiating pain`, `cold sweat`) and classifies intent as `emergency`.\n  2. The graph routing condition [route_ticket](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L257-L267) routes directly to [emergency_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L95-L99).\n  3. [action_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L157-L256) and [policy_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L128-L156) are completely bypassed.\n  4. Zero tool calls are generated; database is never queried.\n  5. MedBot returns immediate emergency escalation:\n     - *\"This sounds like a medical emergency. Please call 911 immediately or go to the nearest emergency room.\"*\n  6. Activity log records: `\ud83d\udea8 Emergency Protocol activated \u2014 escalating to 911 advisory`.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "TC-EMG-002",
+    "category": "emergency",
+    "turns": [
+      "I just ate something with tree nuts and my tongue and lips are swelling rapidly. I can barely breathe, I'm wheezing loudly, and my throat feels like it is closing completely!"
+    ],
+    "expected_intents": [
+      "emergency"
+    ],
+    "reference": "1. [triage_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L43-L93) detects acute life-threatening airway compromise (`barely breathe`, `throat closing`, `swelling rapidly`, `wheezing`) and triggers `emergency`.\n  2. System bypasses standard reception flows and invokes [emergency_agent](file:///Users/abhinav/Desktop/jobs/projects/medibot/backend/med_agents.py#L95-L99).\n  3. MedBot responds instantly with emergency instructions to dial 911 or proceed to an emergency department immediately.\n  4. No appointment booking or patient lookup is attempted.",
+    "no_mutations": true,
+    "require_no_tools": true
+  }
+]

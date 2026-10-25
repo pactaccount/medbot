@@ -1,0 +1,47 @@
+{
+  "suite": "development",
+  "version": "baseline",
+  "cases": 40,
+  "turns": 41,
+  "summary": {
+    "planned_cases": 40,
+    "attempted_cases": 40,
+    "completed_cases": 40,
+    "operational_errors": 0,
+    "completion_rate": 1.0,
+    "intent_accuracy_completed_turns": 0.926829268292683,
+    "deterministic_case_pass_rate": 0.85,
+    "median_case_seconds": 3.4506781664676964,
+    "human_reviewed_cases": 0,
+    "human_accuracy_pass_rate": null,
+    "human_unsupported_claim_response_rate": null,
+    "human_quality_mean_1_to_5": null,
+    "prior_error_attempts": 2,
+    "prior_provider_error_attempts": 1,
+    "judge_scored_cases": 0
+  },
+  "report_sha256": "801caf7ec42c53db1fc3fa580d7d243d9fb8b51cd28a9841a60cf5650423aa6b",
+  "dataset_sha256": "e75b0a564edf30eb4347782114e0872d8efc43475d11d8dc8204415c9d6cc8f1",
+  "policy_sha256": "483a7201cc5312428a3b0445bca1e0dc86d013c07cea1b1a8678aab2dcf20e73",
+  "application_source_sha256": {
+    "backend/med_agents.py": "074ba7f33291cf74522636184e3a86acea5d8145499026b95050c2dff4dbbdd6",
+    "backend/med_mcp.py": "ab39d4e8be8542dcf78d96c9c20a7a9b173573d3865326a28c71e174ee7eb10d"
+  },
+  "model": "openai/nvidia/nemotron-3.5-lightning-30b-a3b",
+  "environment": "real LLM; full LangGraph; in-process MCP; mongomock (not hosted MongoDB)",
+  "limitations": [
+    "No human semantic scores yet",
+    "Not a hosted MongoDB or deployment test",
+    "Completed across continuations after a provider rate limit and an evaluator empty-response interruption",
+    "No measured improvement cycle yet",
+    "Reserved holdout not executed"
+  ],
+  "failed_deterministic_cases": [
+    "D02",
+    "D07",
+    "D14",
+    "D28",
+    "D29",
+    "D31"
+  ]
+}

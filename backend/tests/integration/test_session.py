@@ -68,7 +68,7 @@ class TestSessionMemory:
     async def test_chat_history_content_is_correct(self, api_client):
         import main
         triage = _make_resp('{"intent": "policy", "patient_id": null, "email": null}')
-        policy = _make_resp("We are open weekdays.")
+        policy = _make_resp('{"quotes":["Walk-in patients are accepted for urgent care needs between 8:00 AM and 11:30 AM, Monday through Friday."]}')
 
         with patch("med_agents.acompletion", new=AsyncMock(side_effect=[triage, policy])):
             r = await api_client.post("/chat", json={"message": "Are you open on weekdays?"})
@@ -76,7 +76,7 @@ class TestSessionMemory:
         history = main.SESSION_STORE[sid]
 
         assert history[0]["content"] == "Are you open on weekdays?"
-        assert "open" in history[1]["content"].lower()
+        assert "8:00 AM" in history[1]["content"]
 
     async def test_history_passed_to_agent_on_second_turn(self, api_client):
         """Verify that chat_history is injected into the graph on turn 2."""

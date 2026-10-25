@@ -1,0 +1,54 @@
+{
+  "before": {
+    "planned_cases": 40,
+    "attempted_cases": 40,
+    "completed_cases": 40,
+    "operational_errors": 0,
+    "completion_rate": 1.0,
+    "intent_accuracy_completed_turns": 0.926829268292683,
+    "deterministic_case_pass_rate": 0.85,
+    "median_case_seconds": 3.4506781664676964,
+    "human_reviewed_cases": 12,
+    "human_accuracy_pass_rate": 0.5,
+    "human_unsupported_claim_response_rate": 0.3333333333333333,
+    "human_quality_mean_1_to_5": 3.5833333333333335,
+    "prior_error_attempts": 2,
+    "prior_provider_error_attempts": 1,
+    "judge_scored_cases": 0
+  },
+  "after": {
+    "planned_cases": 40,
+    "attempted_cases": 40,
+    "completed_cases": 40,
+    "operational_errors": 0,
+    "completion_rate": 1.0,
+    "intent_accuracy_completed_turns": 1.0,
+    "deterministic_case_pass_rate": 0.975,
+    "median_case_seconds": 5.93687899998622,
+    "human_reviewed_cases": 12,
+    "human_accuracy_pass_rate": 0.8333333333333334,
+    "human_unsupported_claim_response_rate": 0,
+    "human_quality_mean_1_to_5": 4.75,
+    "prior_error_attempts": 0,
+    "prior_provider_error_attempts": 0,
+    "judge_scored_cases": 0
+  },
+  "same_configured_model": true,
+  "paired_completed_cases": 40,
+  "improved": [
+    "D02",
+    "D07",
+    "D14",
+    "D28",
+    "D31"
+  ],
+  "regressed": [],
+  "note": "Deterministic checks do not establish semantic accuracy or absence of hallucinations.",
+  "review_sample_note": "Same 12 purposefully selected development cases; human labels are not an independent exhaustive ground truth.",
+  "review_audit_notes": [
+    {
+      "case": "D21",
+      "observation": "The reply promises to check availability although the application has no availability tool. The human marked unsupported_claims=no. Preserve the submitted rating but flag this as an engineer/reviewer disagreement; do not claim zero actual hallucinations."
+    }
+  ]
+}

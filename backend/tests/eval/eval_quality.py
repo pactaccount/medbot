@@ -54,11 +54,12 @@ async def get_medbot_response(client, question: str) -> str:
 async def judge_response(question: str, response: str) -> dict:
     """Use litellm to act as a judge and score the response."""
     from litellm import acompletion
+    from med_agents import _nim_options
     prompt = QUALITY_RUBRIC.format(question=question, response=response)
     
     try:
         llm_resp = await acompletion(
-            model=os.environ.get("LITELLM_MODEL", "gemini/gemini-3.5-flash"),
+            **_nim_options(),
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )

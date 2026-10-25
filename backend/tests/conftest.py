@@ -132,3 +132,31 @@ def reset_session_store():
     main.SESSION_STORE.clear()
     yield
     main.SESSION_STORE.clear()
+
+
+@pytest.fixture(autouse=True)
+def isolate_offline_dependencies(request, monkeypatch):
+    """Offline unit/integration suites never use developer credentials or MongoDB."""
+    from pathlib import Path
+    if not {'unit', 'integration'}.intersection(Path(str(request.node.path)).parts):
+        return
+    from contextlib import asynccontextmanager
+    from types import SimpleNamespace
+    monkeypatch.setenv('NVIDIA_API_KEY', 'offline-test-key')
+    monkeypatch.setenv('MONGODB_URI', 'mongodb://localhost:27017')
+    import med_agents
+    import med_mcp
+    from fastmcp import Client
+    collection = mongomock.MongoClient()['offline_tests']['patients']
+    monkeypatch.setattr(med_mcp, 'patients_collection', collection)
+
+    @asynccontextmanager
+    async def isolated_session():
+        async with Client(med_mcp.mcp) as client:
+            class Adapter:
+                async def list_tools(self):
+                    return SimpleNamespace(tools=await client.list_tools())
+                async def call_tool(self, name, arguments):
+                    return await client.call_tool(name, arguments, raise_on_error=False)
+            yield Adapter()
+    monkeypatch.setattr(med_agents, 'open_tool_session', isolated_session)

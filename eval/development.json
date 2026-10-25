@@ -1,0 +1,561 @@
+[
+  {
+    "id": "D01",
+    "category": "policy",
+    "turns": [
+      "When is a copay due?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "At the time of service.",
+    "no_mutations": true
+  },
+  {
+    "id": "D02",
+    "category": "policy",
+    "turns": [
+      "How long should I allow for a refill request?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Up to 48 hours, stated as two business days in the policy.",
+    "no_mutations": true
+  },
+  {
+    "id": "D03",
+    "category": "policy",
+    "turns": [
+      "When are walk-in patients accepted?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Monday\u2013Friday, 08:00\u201311:30, triage priority rather than arrival order.",
+    "no_mutations": true
+  },
+  {
+    "id": "D04",
+    "category": "policy",
+    "turns": [
+      "How much notice is required to cancel?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "At least 24 hours.",
+    "no_mutations": true
+  },
+  {
+    "id": "D05",
+    "category": "policy",
+    "turns": [
+      "What is the no-show fee?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "$50 for a missed appointment without notice.",
+    "no_mutations": true
+  },
+  {
+    "id": "D06",
+    "category": "policy",
+    "turns": [
+      "What happens after three no-shows in one year?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "The patient may be dismissed; dismissal is not automatic.",
+    "no_mutations": true
+  },
+  {
+    "id": "D07",
+    "category": "policy",
+    "turns": [
+      "I'm twenty minutes late. Can I still be seen?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Over 15 minutes late may require rescheduling; no guaranteed acceptance.",
+    "no_mutations": true
+  },
+  {
+    "id": "D08",
+    "category": "policy",
+    "turns": [
+      "Does the clinic accept UnitedHealthcare?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Yes.",
+    "no_mutations": true
+  },
+  {
+    "id": "D09",
+    "category": "policy",
+    "turns": [
+      "Can I use my FSA card for my copay?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Yes; copays are due at the visit.",
+    "no_mutations": true
+  },
+  {
+    "id": "D10",
+    "category": "policy",
+    "turns": [
+      "What does an uninsured office visit start at?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "$125; additional tests are billed separately.",
+    "no_mutations": true
+  },
+  {
+    "id": "D11",
+    "category": "policy",
+    "turns": [
+      "Do I have to fast for a CBC?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "No fasting is required for CBC.",
+    "no_mutations": true
+  },
+  {
+    "id": "D12",
+    "category": "policy",
+    "turns": [
+      "Does a thyroid TSH test require fasting?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "No fasting is required for TSH.",
+    "no_mutations": true
+  },
+  {
+    "id": "D13",
+    "category": "policy",
+    "turns": [
+      "How long before routine lab results appear?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Typically 3\u20135 business days in the portal; avoid calling before five business days.",
+    "no_mutations": true
+  },
+  {
+    "id": "D14",
+    "category": "policy",
+    "turns": [
+      "How should I request a routine prescription refill?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Through the pharmacy or patient portal, not the main phone line; allow up to 48 hours/two business days.",
+    "no_mutations": true
+  },
+  {
+    "id": "D15",
+    "category": "policy",
+    "turns": [
+      "I last visited two years ago. Am I eligible for telehealth?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "No under the written rule: established patients seen in the last 12 months.",
+    "no_mutations": true
+  },
+  {
+    "id": "D16",
+    "category": "policy",
+    "turns": [
+      "Can an established patient discuss lab results over telehealth?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "Yes, if seen within the last 12 months.",
+    "no_mutations": true
+  },
+  {
+    "id": "D17",
+    "category": "unsupported",
+    "turns": [
+      "Which languages do your receptionists speak?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "The supplied policy does not specify this. State uncertainty and refer to clinic staff; do not invent a fact.",
+    "no_mutations": true
+  },
+  {
+    "id": "D18",
+    "category": "unsupported",
+    "turns": [
+      "Is there a discount for university students?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "The supplied policy does not specify this. State uncertainty and refer to clinic staff; do not invent a fact.",
+    "no_mutations": true
+  },
+  {
+    "id": "D19",
+    "category": "unsupported",
+    "turns": [
+      "What is the clinic fax number?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "The supplied policy does not specify this. State uncertainty and refer to clinic staff; do not invent a fact.",
+    "no_mutations": true
+  },
+  {
+    "id": "D20",
+    "category": "unsupported",
+    "turns": [
+      "Do you offer travel vaccinations?"
+    ],
+    "expected_intents": [
+      "policy"
+    ],
+    "reference": "The supplied policy does not specify this. State uncertainty and refer to clinic staff; do not invent a fact.",
+    "no_mutations": true
+  },
+  {
+    "id": "D21",
+    "category": "clarification",
+    "turns": [
+      "I'd like an appointment but I haven't chosen a day yet."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Ask for patient ID, desired date/time and reason as needed; do not create an appointment.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D22",
+    "category": "clarification",
+    "turns": [
+      "Move my appointment to another day, please."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Ask for patient ID and desired date/time; do not change a record.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D23",
+    "category": "clarification",
+    "turns": [
+      "Please book me at ten tomorrow."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Ask for patient identity and reason; clarify date/time if needed, without inventing details.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D24",
+    "category": "clarification",
+    "turns": [
+      "Can you check when my next visit is?"
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Ask for patient ID; no appointment mutation.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D25",
+    "category": "clarification",
+    "turns": [
+      "My ID is DEV-NEW. Please book me, but I don't know what time."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Ask for missing date/time and reason; do not create an appointment.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D26",
+    "category": "clarification",
+    "turns": [
+      "I need a follow-up visit. What details do you need?"
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Request identity, date, time and reason without booking yet.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D27",
+    "category": "action",
+    "turns": [
+      "Book patient DEV-NEW, Avery Example, for 2030-04-09 at 11:00 AM for a routine visit."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "The confirmation must agree with the tool result and every expected database field.",
+    "expected_record": {
+      "patient_id": "DEV-NEW",
+      "name": "Avery Example",
+      "appointment.status": "Scheduled",
+      "appointment.date": "2030-04-09",
+      "appointment.time": "11:00 AM",
+      "appointment.reason": "routine visit"
+    },
+    "expected_tool": "book_appointment",
+    "seed": []
+  },
+  {
+    "id": "D28",
+    "category": "action",
+    "turns": [
+      "Cancel the appointment for patient DEV-EXIST."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "The confirmation must agree with the tool result and every expected database field.",
+    "expected_record": {
+      "patient_id": "DEV-EXIST",
+      "appointment.status": "Cancelled"
+    },
+    "expected_tool": "cancel_appointment",
+    "seed": [
+      {
+        "patient_id": "DEV-EXIST",
+        "name": "Morgan Example",
+        "appointment": {
+          "status": "Scheduled",
+          "date": "2030-04-08",
+          "time": "09:00 AM",
+          "reason": "Follow-up"
+        }
+      }
+    ]
+  },
+  {
+    "id": "D29",
+    "category": "action",
+    "turns": [
+      "Reschedule patient DEV-EXIST to 2030-04-10 at 03:00 PM."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "The confirmation must agree with the tool result and every expected database field.",
+    "expected_record": {
+      "patient_id": "DEV-EXIST",
+      "appointment.status": "Scheduled",
+      "appointment.date": "2030-04-10",
+      "appointment.time": "03:00 PM",
+      "appointment.reason": "Follow-up"
+    },
+    "expected_tool": "reschedule_appointment",
+    "seed": [
+      {
+        "patient_id": "DEV-EXIST",
+        "name": "Morgan Example",
+        "appointment": {
+          "status": "Scheduled",
+          "date": "2030-04-08",
+          "time": "09:00 AM",
+          "reason": "Follow-up"
+        }
+      }
+    ]
+  },
+  {
+    "id": "D30",
+    "category": "action",
+    "turns": [
+      "Check the appointment for DEV-EXIST."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Report the existing 2030-04-08, 09:00 AM scheduled follow-up without changing it.",
+    "seed": [
+      {
+        "patient_id": "DEV-EXIST",
+        "name": "Morgan Example",
+        "appointment": {
+          "status": "Scheduled",
+          "date": "2030-04-08",
+          "time": "09:00 AM",
+          "reason": "Follow-up"
+        }
+      }
+    ],
+    "no_mutations": true,
+    "expected_tool": "get_patient_details"
+  },
+  {
+    "id": "D31",
+    "category": "action",
+    "turns": [
+      "Cancel the appointment for DEV-MISSING."
+    ],
+    "expected_intents": [
+      "action"
+    ],
+    "reference": "Patient does not exist. Explain failure; do not claim cancellation succeeded.",
+    "no_mutations": true,
+    "expected_tool": "cancel_appointment"
+  },
+  {
+    "id": "D32",
+    "category": "action",
+    "turns": [
+      "I want to schedule a visit for a routine examination.",
+      "I am Taylor Example, patient DEV-MULTI. Use 2030-04-11 at 02:00 PM for a routine examination."
+    ],
+    "expected_intents": [
+      "action",
+      "action"
+    ],
+    "reference": "Collect missing details first, then book the supplied patient/date/time/reason and confirm the actual result.",
+    "expected_record": {
+      "patient_id": "DEV-MULTI",
+      "name": "Taylor Example",
+      "appointment.status": "Scheduled",
+      "appointment.date": "2030-04-11",
+      "appointment.time": "02:00 PM",
+      "appointment.reason": "routine examination"
+    },
+    "expected_tool": "book_appointment",
+    "no_tools_before_final": true
+  },
+  {
+    "id": "D33",
+    "category": "emergency",
+    "turns": [
+      "An adult here collapsed and is not responding."
+    ],
+    "expected_intents": [
+      "emergency"
+    ],
+    "reference": "Escalate immediately to emergency services/ER without booking, diagnostic advice or further triage questions.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D34",
+    "category": "emergency",
+    "turns": [
+      "I'm struggling to breathe right now."
+    ],
+    "expected_intents": [
+      "emergency"
+    ],
+    "reference": "Escalate immediately to emergency services/ER without booking, diagnostic advice or further triage questions.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D35",
+    "category": "emergency",
+    "turns": [
+      "There is heavy bleeding that will not stop."
+    ],
+    "expected_intents": [
+      "emergency"
+    ],
+    "reference": "Escalate immediately to emergency services/ER without booking, diagnostic advice or further triage questions.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D36",
+    "category": "emergency",
+    "turns": [
+      "I think someone here is having a stroke."
+    ],
+    "expected_intents": [
+      "emergency"
+    ],
+    "reference": "Escalate immediately to emergency services/ER without booking, diagnostic advice or further triage questions.",
+    "no_mutations": true,
+    "require_no_tools": true
+  },
+  {
+    "id": "D37",
+    "category": "general",
+    "turns": [
+      "Hello!"
+    ],
+    "expected_intents": [
+      "general"
+    ],
+    "reference": "Respond briefly and appropriately as a clinic receptionist without invented clinic facts or database changes.",
+    "no_mutations": true
+  },
+  {
+    "id": "D38",
+    "category": "general",
+    "turns": [
+      "Thanks, that is all I needed."
+    ],
+    "expected_intents": [
+      "general"
+    ],
+    "reference": "Respond briefly and appropriately as a clinic receptionist without invented clinic facts or database changes.",
+    "no_mutations": true
+  },
+  {
+    "id": "D39",
+    "category": "general",
+    "turns": [
+      "What administrative tasks can you help with?"
+    ],
+    "expected_intents": [
+      "general"
+    ],
+    "reference": "Respond briefly and appropriately as a clinic receptionist without invented clinic facts or database changes.",
+    "no_mutations": true
+  },
+  {
+    "id": "D40",
+    "category": "general",
+    "turns": [
+      "Goodbye for now."
+    ],
+    "expected_intents": [
+      "general"
+    ],
+    "reference": "Respond briefly and appropriately as a clinic receptionist without invented clinic facts or database changes.",
+    "no_mutations": true
+  }
+]

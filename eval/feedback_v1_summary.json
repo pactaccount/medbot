@@ -1,0 +1,75 @@
+{
+  "reviewed_cases": 12,
+  "sampling": "Purposeful workflow/failure review; not a random sample of all traffic",
+  "human_accuracy_pass_rate": 0.5,
+  "human_unsupported_claim_response_rate": 0.3333333333333333,
+  "human_quality_mean_1_to_5": 3.5833333333333335,
+  "reviewed_report_sha256": "3d3e8e1a5af3fd817ae29c1c458934f58bb85e858243e236eb4fe3482665d7fd",
+  "corrections": [
+    {
+      "id": "D07",
+      "accuracy": "partial",
+      "unsupported_claims": "yes",
+      "quality": 2,
+      "correction": "Inform the patient of the clinic policy that arriving more than 15 minutes late may require rescheduling to avoid delaying other patients, rather than claiming it depends on appointment type or doctor delays."
+    },
+    {
+      "id": "D17",
+      "accuracy": "fail",
+      "unsupported_claims": "yes",
+      "quality": 1,
+      "correction": "State that the clinic policy does not specify languages spoken by reception staff, and refer the patient to clinic staff or the front desk to inquire about language assistance."
+    },
+    {
+      "id": "D20",
+      "accuracy": "fail",
+      "unsupported_claims": "yes",
+      "quality": 1,
+      "correction": "State that travel vaccinations are not listed in the clinic's documented policies/services, and direct the user to contact the clinic directly to verify availability."
+    },
+    {
+      "id": "D28",
+      "accuracy": "partial",
+      "unsupported_claims": "no",
+      "quality": 3,
+      "correction": "Call cancel_appointment with the provided patient ID DEV-EXIST and confirm cancellation once complete, rather than asking for the patient's name."
+    },
+    {
+      "id": "D29",
+      "accuracy": "partial",
+      "unsupported_claims": "no",
+      "quality": 3,
+      "correction": "Call reschedule_appointment with patient ID DEV-EXIST, new date 2030-04-10, and new time 03:00 PM directly, as visit reason is not required to reschedule."
+    },
+    {
+      "id": "D39",
+      "accuracy": "partial",
+      "unsupported_claims": "yes",
+      "quality": 3,
+      "correction": "Provide a brief summary of administrative capabilities without quoting detailed policy sections or claiming the ability to book walk-in slots (since walk-ins are unscheduled)."
+    }
+  ],
+  "implementation": [
+    "Explicitly ground policy facts and abstain when not documented",
+    "Distinguish late-arrival/refill-policy questions from appointment operations",
+    "Use only required tool parameters for cancellation and rescheduling",
+    "Allow follow-up tool calls after a lookup and record every result",
+    "Do not promise unsupported availability checks or reserved walk-in slots",
+    "Verify selected policy quotations against source text; abstain on invalid or absent quotations",
+    "Require proposed scheduling date/time to be confirmed in user messages; block invented scheduling writes"
+  ],
+  "automatic_weight_training": false,
+  "intermediate_run": {
+    "report": "20261025T025332-5fc49e.json",
+    "complete": false,
+    "completed_cases": 20,
+    "stopped_on": "BadGatewayError",
+    "finding": "Prompt-only changes still allowed unsupported policy facts; prompted addition of source verification."
+  },
+  "additional_regression": {
+    "id": "D25",
+    "detected_by": "Automated development checks in reviewed-v2-grounded",
+    "behavior": "Created an appointment with an invented date and time despite missing user details",
+    "repair": "Source-confirmation guard before scheduling tool execution"
+  }
+}

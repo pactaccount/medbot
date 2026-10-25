@@ -1,0 +1,55 @@
+{
+  "suite": "holdout",
+  "version": "frozen-v3-holdout",
+  "summary": {
+    "planned_cases": 12,
+    "attempted_cases": 12,
+    "completed_cases": 12,
+    "operational_errors": 0,
+    "completion_rate": 1.0,
+    "intent_accuracy_completed_turns": 1.0,
+    "deterministic_case_pass_rate": 1,
+    "median_case_seconds": 5.821176646044478,
+    "human_reviewed_cases": 12,
+    "human_accuracy_pass_rate": 1,
+    "human_unsupported_claim_response_rate": 0,
+    "human_quality_mean_1_to_5": 4.75,
+    "prior_error_attempts": 0,
+    "prior_provider_error_attempts": 0,
+    "judge_scored_cases": 0
+  },
+  "report_sha256": "81b22059c491ba41358a03975a0c37fb85dda4b6952427206ec3ec47122f33db",
+  "dataset_sha256": "f8b4e6d6c5b8f1dd1a348000875ddb647b0ed0b0e6d0acfc095671bcf96a4e41",
+  "application_source_sha256": {
+    "backend/med_agents.py": "6acd7ab27450ddbb64b6c6c55cfcf5f8e0278095ec73cc6f9cd0e6160852a70a",
+    "backend/med_mcp.py": "ab39d4e8be8542dcf78d96c9c20a7a9b173573d3865326a28c71e174ee7eb10d"
+  },
+  "environment": "real LLM; full LangGraph; in-process MCP; mongomock (not hosted MongoDB)",
+  "user_turns": 14,
+  "limitations": [
+    "12 reserved conversations, not a blind external benchmark",
+    "In-process MCP and mongomock; not a hosted MongoDB or deployment test",
+    "No prompt tuning or retries of completed holdout cases",
+    "Human ratings: all 12 marked pass, with completeness omissions noted in three cases; not proof of universal accuracy or no hallucinations."
+  ],
+  "failed_deterministic_cases": [],
+  "reviewed_report_sha256": "44fe8d22cc84f97a0fada4744578106e6c40c8a167089860d645614201a78a57",
+  "review_notes": [
+    {
+      "id": "TC-POL-001",
+      "notes": "Directly and accurately quotes the required fasting durations and permitted items."
+    },
+    {
+      "id": "TC-POL-002",
+      "notes": "Accurately covers all accepted/excluded insurances and disallows cash/checks; omitted the $125 uninsured starting office visit rate mentioned in the baseline policy."
+    },
+    {
+      "id": "TC-POL-003",
+      "notes": "Accurately explains controlled-substance visit requirements and strict ban on early refills; did not mention the 48-hour general pharmacy/portal request timeframe."
+    },
+    {
+      "id": "TC-ACT-002",
+      "notes": "Appropriately requested ID before executing cancellation, verified DB status, and confirmed; omitted mention of the 24-hour notice policy."
+    }
+  ]
+}

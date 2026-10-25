@@ -1,0 +1,13 @@
+{
+  "source_document_sha256": "2afb290e6cc9902db714a628c2925c4bb9d06d5708f2b1b638687e1d81afcc1d",
+  "dataset_sha256": "f8b4e6d6c5b8f1dd1a348000875ddb647b0ed0b0e6d0acfc095671bcf96a4e41",
+  "cases": 12,
+  "user_turns": 14,
+  "application_source_sha256": {
+    "backend/med_agents.py": "6acd7ab27450ddbb64b6c6c55cfcf5f8e0278095ec73cc6f9cd0e6160852a70a",
+    "backend/med_mcp.py": "ab39d4e8be8542dcf78d96c9c20a7a9b173573d3865326a28c71e174ee7eb10d"
+  },
+  "fixture_note": "Cancellation and rescheduling seed records are synthetic; earlier appointment dates/times are fixture choices where the original document did not specify exact values.",
+  "scoring_note": "Unsupported-question cases accept policy or general, matching the source document. Semantic accuracy and unsupported claims require human review.",
+  "scope": "Reserved from development tuning, not a blind external benchmark. Original document architecture/compliance claims are not treated as verified facts."
+}

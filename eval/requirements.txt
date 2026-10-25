@@ -1,0 +1,5 @@
+# Install after backend/requirements.txt; these packages are evaluation-only.
+pytest
+pytest-asyncio
+httpx
+mongomock

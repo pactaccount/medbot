@@ -4,7 +4,7 @@ Uses real LLM + real MongoDB. Validates full booking conversations and DB state.
 
 Requirements:
   - MONGODB_URI set in medibot/backend/.env
-  - LITELLM_MODEL set (defaults to gemini/gemini-3.5-flash)
+  - NVIDIA_API_KEY set (LITELLM_MODEL defaults to NVIDIA NIM)
   - Backend NOT running (tests use FastAPI TestClient directly)
 
 Each test creates isolated appointments and cleans up after itself.
