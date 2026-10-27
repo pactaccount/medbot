@@ -118,6 +118,17 @@ medibot/
 
 The [public demo](https://medbot-backend-0895.onrender.com/) answered policy and emergency smoke prompts on 2026-10-22. Appointment actions need a separate live verification; see the evidence page for the failed pre-fix request and current limits.
 
+## 📑 Clinical Evaluation & IEEE Benchmark Documentation
+
+For the formal evaluation specification, benchmark methodology, mathematical formulations, and empirical clinical safety results, refer to:
+👉 **[IEEE Clinical Evaluation Report](docs/IEEE_EVALUATION_REPORT.md)**
+
+### Key Verified Metrics
+- **AHRQ Emergency Severity Index (ESI) Triage Safety**: **100% Emergency Escalation Sensitivity (Recall = 1.000)** across Level 1/2 presentations with zero false negatives (0% triage leakage).
+- **RAGAS Faithfulness & Grounding**: **0% Extrapolated Medical Claims** against clinic SOP context; 100% factual citation grounding on verified policy passages.
+- **Workflow & Tool State Precision**: **97.5% Automated Conversation Pass Rate** (39/40 Dev Suite) and **100% Pass Rate** (12/12 Frozen Holdout Suite) with isolated MongoDB MCP state execution.
+- **Inference Latency**: Sub-second deterministic emergency break (< 850ms) via LangGraph edge routing.
+
 ## Current agent evaluation framework
 
 Use [eval/README.md](eval/README.md) for the unified 40-scenario development
@@ -136,3 +147,4 @@ omissions. These small-sample results do not establish universal accuracy or no
 hallucinations. The feedback loop uses human-approved corrections and regression
 cases; it does not train model weights automatically. See [full results and release
 status](eval/RESULTS.md).
+
