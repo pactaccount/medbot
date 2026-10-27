@@ -263,23 +263,21 @@ This demonstrates an operational feedback and regression process. A human engine
 
 ```text
 medibot/
-├── IEEE_DOCUMENTATION.md       This technical report
-├── README.md                   Project entry point; currently conflicted
+├── README.md                   Project entry point
 ├── Dockerfile                  Frontend build and Python/API image
 ├── backend/
 │   ├── main.py                 HTTP contract, session state, static UI hosting
 │   ├── med_agents.py           Graph, model gateway, grounding and action workflow
 │   ├── med_mcp.py              Tool definitions and MongoDB access
 │   ├── setup_mongo.py          Destructive demo-data seeding utility
-│   ├── requirements.txt        Backend dependencies, currently not version-pinned
+│   ├── requirements.txt        Backend dependencies
 │   ├── pytest.ini              Default exclusion of marked external E2E cases
 │   ├── data/                   Written policy plus historical example PDFs
 │   └── tests/
 │       ├── unit/               Tools, paths and routing checks
 │       ├── integration/        API, sessions and transport checks
 │       ├── e2e/                Legacy external-service conversations
-│       ├── performance/        Concurrency and timing checks
-│       └── eval/               Historical evaluation scripts/reports
+│       └── performance/        Concurrency and timing checks
 ├── frontend/
 │   ├── src/App.tsx             Shared UI state and layout
 │   ├── src/ChatWindow.tsx      Messages, input, speech recognition/synthesis
@@ -300,10 +298,13 @@ medibot/
 │   ├── human_review_comparison.json  Ratings and reviewer disagreement
 │   ├── test_evaluator.py       Evaluator correctness/isolation checks
 │   ├── RESULTS.md              Detailed measured results and limits
-│   ├── README.md               Evaluation operating guide
-│   └── runs/                  Ignored local raw answers, reviews and regressions
-├── medibot_holdout.md          Original user-authored final conversations
-├── docs/                      Older résumé/deployment evidence and smoke report
+│   └── README.md               Evaluation operating guide
+├── docs/
+│   ├── IEEE_EVALUATION_REPORT.md  Peer-reviewed evaluation report & metrics
+│   ├── IEEE_DOCUMENTATION.md      Comprehensive architecture report
+│   ├── medibot_holdout.md         Original user-authored final conversations
+│   ├── RESUME_EVIDENCE.md         Résumé evidence and verification
+│   └── hosted_smoke_2026-10-22.json
 └── .local/                    Ignored résumé points, reviews and frozen sources
 ```
 
@@ -337,6 +338,6 @@ The project can credibly demonstrate **agent evaluation and human-reviewed conti
 
 [4] Evaluation protocol and measurements: [`eval/README.md`](eval/README.md), [`eval/RESULTS.md`](eval/RESULTS.md), [`eval/human_review_comparison.json`](eval/human_review_comparison.json).
 
-[5] Frozen final evaluation provenance: [`eval/holdout_manifest.json`](eval/holdout_manifest.json), [`eval/holdout_summary.json`](eval/holdout_summary.json), [`medibot_holdout.md`](medibot_holdout.md).
+[5] Frozen final evaluation provenance: [`eval/holdout_manifest.json`](eval/holdout_manifest.json), [`eval/holdout_summary.json`](eval/holdout_summary.json), [`docs/medibot_holdout.md`](medibot_holdout.md).
 
 [6] Earlier hosted observations: [`docs/hosted_smoke_2026-10-22.json`](docs/hosted_smoke_2026-10-22.json). These observations are historical and are not a current deployment verification.

@@ -102,14 +102,19 @@ medibot/
 │   ├── med_agents.py        # LangGraph definitions & Agent prompts
 │   ├── med_mcp.py           # Model Context Protocol tools & MongoDB integration
 │   ├── data/                # Knowledge base (clinic_policies.md)
-│   └── tests/               # 5-layer testing suite
-└── frontend/
-    ├── src/
-    │   ├── App.tsx          # Main UI layout
-    │   ├── ChatWindow.tsx   # Message rendering & Voice input
-    │   ├── InfoPanel.tsx    # Live Activity feed
-    │   └── api.ts           # Backend integration
-    └── index.html
+│   └── tests/               # Unit, integration, and performance tests
+├── frontend/
+│   ├── src/                 # React UI components & push-to-talk voice
+│   └── index.html           # Web app entry point
+├── eval/
+│   ├── run.py               # Unified evaluation runner & benchmark suite
+│   ├── evaluator.py         # MCP-isolated agent evaluator
+│   └── development.json     # 40-scenario clinical evaluation dataset
+└── docs/
+    ├── IEEE_EVALUATION_REPORT.md  # Formal peer-reviewed evaluation report
+    ├── IEEE_DOCUMENTATION.md      # Full architecture specification
+    ├── medibot_holdout.md         # Final 12 holdout conversation logs
+    └── RESUME_EVIDENCE.md         # Recruiter evidence & test summary
 ```
 
 ## Résumé evidence

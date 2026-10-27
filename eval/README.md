@@ -24,7 +24,7 @@ a patient ID or detect every contradictory detail in a conversation.
 The 40 development scenarios in `development.json` cover policy facts, unsupported
 questions, missing information, appointment operations, multi-turn context, emergency
 routing and general conversation. `build_development.py` reproduces this development
-file without reading the reserved `medibot_holdout.md`.
+file without reading the reserved `docs/medibot_holdout.md`.
 
 The evaluator calls the configured real model. It executes the application's actual
 FastMCP tools through an in-process MCP client, substituting a fresh mongomock
